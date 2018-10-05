@@ -27,6 +27,8 @@ package java.lang;
 
 import jdk.internal.HotSpotIntrinsicCandidate;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * A mutable sequence of characters.  This class provides an API compatible
  * with {@code StringBuffer}, but with no guarantee of synchronization.
@@ -65,9 +67,8 @@ import jdk.internal.HotSpotIntrinsicCandidate;
  * use by multiple threads. If such synchronization is required then it is
  * recommended that {@link java.lang.StringBuffer} be used.
  *
- * <p>Unless otherwise noted, passing a {@code null} argument to a constructor
- * or method in this class will cause a {@link NullPointerException} to be
- * thrown.
+ * <p>Unless otherwise noted, passing a {@code null} argument to a method
+ * in this class will cause a {@link NullPointerException} to be thrown.
  *
  * @apiNote
  * {@code StringBuilder} implements {@code Comparable} but does not override
@@ -103,7 +104,7 @@ public final class StringBuilder
      * Constructs a string builder with no characters in it and an
      * initial capacity specified by the {@code capacity} argument.
      *
-     * @param      capacity  the initial capacity.
+     * @param      capacity  the initial capacity. Should be positive or zero.
      * @throws     NegativeArraySizeException  if the {@code capacity}
      *               argument is less than {@code 0}.
      */
@@ -117,7 +118,8 @@ public final class StringBuilder
      * specified string. The initial capacity of the string builder is
      * {@code 16} plus the length of the string argument.
      *
-     * @param   str   the initial contents of the buffer.
+     * @param   str   the initial contents of the buffer. Should be not null.
+     * @throws  NullPointerException if the {@code str} is {@code null}.
      */
     @HotSpotIntrinsicCandidate
     public StringBuilder(String str) {
@@ -130,12 +132,35 @@ public final class StringBuilder
      * as the specified {@code CharSequence}. The initial capacity of
      * the string builder is {@code 16} plus the length of the
      * {@code CharSequence} argument.
+     * <p>
+     * If the length of the specified {@code CharSequence} is
+     * less than or equal to zero, then an empty buffer of capacity
+     * {@code 16} is returned.
      *
-     * @param      seq   the sequence to copy.
+     * @param      seq   the sequence to copy. Should be not null.
+     * @throws     NullPointerException if the {@code seq} is {@code null}.
      */
     public StringBuilder(CharSequence seq) {
-        this(seq.length() + 16);
-        append(seq);
+        this(seq, seq.length() + 16);
+    }
+
+    /**
+     * Constructs a string builder that contains the same characters
+     * as the specified {@code CharSequence}. The initial capacity
+     * is specified with the {@code capacity} argument.
+     * <p>
+     * If the length of the specified {@code CharSequence} is
+     * less than or equal to zero, then an empty buffer of {@code capacity} is returned.
+     *
+     * @param      seq      the sequence to copy. Should be not null.
+     * @param      capacity the initial capacity. Should be positive or zero.
+     * @throws     NullPointerException if the {@code seq} is {@code null}.
+     * @throws     NegativeArraySizeException if the {@code capacity}
+     *               argument is less than {@code 0}.
+     */
+    public StringBuilder(CharSequence seq, int capacity) {
+        this(capacity);
+        append(requireNonNull(seq));
     }
 
     /**

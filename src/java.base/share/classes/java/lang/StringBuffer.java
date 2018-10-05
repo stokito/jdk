@@ -25,8 +25,9 @@
 
 package java.lang;
 
-import java.util.Arrays;
 import jdk.internal.HotSpotIntrinsicCandidate;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * A thread-safe, mutable sequence of characters.
@@ -80,9 +81,8 @@ import jdk.internal.HotSpotIntrinsicCandidate;
  * buffer array. If the internal buffer overflows, it is
  * automatically made larger.
  * <p>
- * Unless otherwise noted, passing a {@code null} argument to a constructor
- * or method in this class will cause a {@link NullPointerException} to be
- * thrown.
+ * Unless otherwise noted, passing a {@code null} argument to a method
+ * in this class will cause a {@link NullPointerException} to be thrown.
  * <p>
  * As of  release JDK 5, this class has been supplemented with an equivalent
  * class designed for use by a single thread, {@link StringBuilder}.  The
@@ -130,7 +130,7 @@ import jdk.internal.HotSpotIntrinsicCandidate;
      * Constructs a string buffer with no characters in it and
      * the specified initial capacity.
      *
-     * @param      capacity  the initial capacity.
+     * @param      capacity  the initial capacity. Should be positive or zero.
      * @throws     NegativeArraySizeException  if the {@code capacity}
      *             argument is less than {@code 0}.
      */
@@ -144,7 +144,8 @@ import jdk.internal.HotSpotIntrinsicCandidate;
      * specified string. The initial capacity of the string buffer is
      * {@code 16} plus the length of the string argument.
      *
-     * @param   str   the initial contents of the buffer.
+     * @param   str   the initial contents of the buffer. Should be not null.
+     * @throws  NullPointerException if the {@code str} is {@code null}.
      */
     @HotSpotIntrinsicCandidate
     public StringBuffer(String str) {
@@ -162,12 +163,31 @@ import jdk.internal.HotSpotIntrinsicCandidate;
      * less than or equal to zero, then an empty buffer of capacity
      * {@code 16} is returned.
      *
-     * @param      seq   the sequence to copy.
+     * @param      seq   the sequence to copy. Should be not null.
+     * @throws     NullPointerException if the {@code seq} is {@code null}.
      * @since 1.5
      */
     public StringBuffer(CharSequence seq) {
-        this(seq.length() + 16);
-        append(seq);
+        this(seq, seq.length() + 16);
+    }
+
+    /**
+     * Constructs a string buffer that contains the same characters
+     * as the specified {@code CharSequence}. The initial capacity
+     * is specified with the {@code capacity} argument.
+     * <p>
+     * If the length of the specified {@code CharSequence} is
+     * less than or equal to zero, then an empty buffer of {@code capacity} is returned.
+     *
+     * @param      seq      the sequence to copy. Should be not null.
+     * @param      capacity the initial capacity. Should be positive or zero.
+     * @throws     NullPointerException if the {@code seq} is {@code null}.
+     * @throws     NegativeArraySizeException if the {@code capacity}
+     *               argument is less than {@code 0}.
+     */
+    public StringBuffer(CharSequence seq, int capacity) {
+        this(capacity);
+        append(requireNonNull(seq));
     }
 
     /**
