@@ -839,6 +839,114 @@ abstract class AbstractStringBuilder implements Appendable, CharSequence {
     }
 
     /**
+     * Appends new line with system line separator (LF in UNIX or CRLF in Windows OS).
+     * NOTE: The method is system dependant and may return different results.
+     * @return a reference to this object.
+     * @see #appendLf()
+     * @see #appendCrLf()
+     * @see System#lineSeparator()
+     */
+    public AbstractStringBuilder appendLine() {
+        append(System.lineSeparator());
+        return this;
+    }
+
+    /**
+     * Appends a new line with UNIX like LF (Line Feed or \n) symbol.
+     * @return a reference to this object.
+     * @see #appendLine()
+     * @see #appendCrLf()
+     */
+    public AbstractStringBuilder appendLf() {
+        ensureCapacityInternal(count + 1);
+        if (isLatin1()) {
+            value[count++] = (byte)'\n';
+        } else {
+            StringUTF16.putCharSB(value, count++, (byte)'\n');
+        }
+        return this;
+    }
+
+    /**
+     * Appends a new line with Windows like CRLF (Line Feed and Carriage Return or \r\n) symbols.
+     * @return a reference to this object.
+     * @see #appendLf()
+     * @see #appendCrLf()
+     */
+    public AbstractStringBuilder appendCrLf() {
+        ensureCapacityInternal(count + 2);
+        if (isLatin1()) {
+            value[count++] = (byte)'\r';
+            value[count++] = (byte)'\n';
+        } else {
+            StringUTF16.putCharSB(value, count++, '\r');
+            StringUTF16.putCharSB(value, count++, '\n');
+        }
+        return this;
+    }
+
+    /**
+     * Appends the string representation of the {@code Object} argument
+     * and new line with system line separator (LF in UNIX or CRLF in Windows OS).
+     * NOTE: The method is system dependant and may return different results.
+     * <p>
+     * The overall effect is exactly as if the argument were converted
+     * to a string by the method {@link String#valueOf(Object)},
+     * and the characters of that string were then
+     * {@link #append(String) appended} to this character sequence.
+     *
+     * @param   object   an {@code Object}. May be a null.
+     * @see #append(Object)
+     * @see #appendLine()
+     * @return a reference to this object.
+     */
+    public AbstractStringBuilder appendLine(Object object) {
+        append(object);
+        appendLine();
+        return this;
+    }
+
+    /**
+     * Appends the string representation of the {@code Object} argument
+     * and new line with UNIX like LF (\n) symbols.
+     * <p>
+     * The overall effect is exactly as if the argument were converted
+     * to a string by the method {@link String#valueOf(Object)},
+     * and the characters of that string were then
+     * {@link #append(String) appended} to this character sequence.
+     *
+     * @param   object   an {@code Object}. May be a null.
+     * @see #append(Object)
+     * @see #appendLf()
+     * @return a reference to this object.
+     */
+    public AbstractStringBuilder appendLf(Object object) {
+        append(object);
+        appendLf();
+        return this;
+    }
+
+    /**
+     * Appends the string representation of the {@code Object} argument
+     * and new line with Windows like CRLF (\r\n) symbols.
+     * <p>
+     * The overall effect is exactly as if the argument were converted
+     * to a string by the method {@link String#valueOf(Object)},
+     * and the characters of that string were then
+     * {@link #append(String) appended} to this character sequence.
+     *
+     * @param   object   an {@code Object}. May be a null.
+     * @see #append(Object)
+     * @see #appendCrLf()
+     * @return a reference to this object.
+     */
+    public AbstractStringBuilder appendCrLf(Object object) {
+        append(object);
+        appendCrLf();
+        return this;
+    }
+
+    /**
      * Removes the characters in a substring of this sequence.
      * The substring begins at the specified {@code start} and extends to
      * the character at index {@code end - 1} or to the end of the

@@ -464,6 +464,48 @@ import jdk.internal.HotSpotIntrinsicCandidate;
         return this;
     }
 
+    @Override
+    public synchronized StringBuffer appendLine() {
+        toStringCache = null;
+        super.appendLine();
+        return this;
+    }
+
+    @Override
+    public synchronized StringBuffer appendLf() {
+        toStringCache = null;
+        super.appendLf();
+        return this;
+    }
+
+    @Override
+    public synchronized StringBuffer appendCrLf() {
+        toStringCache = null;
+        super.appendCrLf();
+        return this;
+    }
+
+    @Override
+    public synchronized StringBuffer appendLine(Object object) {
+        toStringCache = null;
+        super.appendLine(object);
+        return this;
+    }
+
+    @Override
+    public synchronized StringBuffer appendLf(Object object) {
+        toStringCache = null;
+        super.appendLf(object);
+        return this;
+    }
+
+    @Override
+    public synchronized StringBuffer appendCrLf(Object object) {
+        toStringCache = null;
+        super.appendCrLf(object);
+        return this;
+    }
+
     /**
      * @throws StringIndexOutOfBoundsException {@inheritDoc}
      * @since      1.2

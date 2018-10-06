@@ -276,6 +276,42 @@ public final class StringBuilder
         return this;
     }
 
+    @Override
+    public StringBuilder appendLine() {
+        super.appendLine();
+        return this;
+    }
+
+    @Override
+    public StringBuilder appendLf() {
+        super.appendLf();
+        return this;
+    }
+
+    @Override
+    public StringBuilder appendCrLf() {
+        super.appendCrLf();
+        return this;
+    }
+
+    @Override
+    public StringBuilder appendLine(Object object) {
+        super.appendLine(object);
+        return this;
+    }
+
+    @Override
+    public StringBuilder appendLf(Object object) {
+        super.appendLf(object);
+        return this;
+    }
+
+    @Override
+    public StringBuilder appendCrLf(Object object) {
+        super.appendCrLf(object);
+        return this;
+    }
+
     /**
      * @throws StringIndexOutOfBoundsException {@inheritDoc}
      */
